@@ -12,8 +12,9 @@ from keras import optimizers
 #the sum of the NumTraining and NumTesting values must equal NumVectors
 DataFileName = r"C:\Users\John\Documents\Visual Studio 2015\Projects\AI\OIT-ML-2014-NNC\Neural Net Cultivator\Data and Results\iris.txt"
 DataFileDelimiter = " "
-ManagerOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\irisManagerResult.txt"
+ManagerOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\irisCultivatorResult.txt"
 NNOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\irisNNResult.txt"
+MoEOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\irisMoEResult.txt"
 TrueOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\TrueNNResult.txt"
 WorkerCompositeOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\WorkerCompositeNNResult"
 
