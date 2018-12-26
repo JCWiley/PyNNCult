@@ -11,6 +11,7 @@ import numpy as np
 
 #%% Import the settings file for the current test
 exec(open("Iris_Settings.py").read())
+#exec(open("MilSong_Settings.py").read())
 #exec(open("MNIST_Settings.py").read())
 
 #%% Import all the tool files
@@ -18,7 +19,7 @@ exec(open("LVQ.py").read())
 exec(open("Tools.py").read())
 exec(open("Cultivator.py").read())
 exec(open("MLP.py").read())
-exec(open("MixtureOfExperts.py").read())
+exec(open("SY_MoE.py").read())
 #-------------------------------
 #set system variables
 DEBUG = 0
@@ -55,53 +56,56 @@ for T in range(0,NUMTRIALS):
     
     Validation_X = Vali[0]
     Validation_Y = Vali[1]
-    #%%
-    Cult = Cultivator(NUM_INPUTS,NUM_OUTPUTS,WRKR_NUM_WORKERS,WRKR_LOSS,WRKR_MET,
-                      WRKR_EPOCHS,WRKR_BATCH_SIZE,WRKR_ACTIVATION,WRKR_LEARNING_RATE,
-                      WRKR_MOMENTUM,WRKR_LYR_1,WRKR_LYR_2,WRKR_LYR_3,WRKR_OPT,
-                      LVQ_LEARNING_RATE,LVQ_PREDICTED_NUM_CATAGORIES,
-                      MSTR_LOSS,MSTR_MET,MSTR_EPOCHS,
-                      MSTR_BATCH_SIZE,MSTR_ACTIVATION,MSTR_LEARNING_RATE,
-                      MSTR_MOMENTUM,MSTR_LYR_1,MSTR_LYR_2,MSTR_LYR_3,MSTR_OPT)
     
-    Cult.Train(Training_X,Training_Y,Training_X,Training_Y)
-    #Cult.Train(Training_X,Training_Y,Holdout_X,Holdout_Y)
-    #print("Cultivator Training Complete")
-    #%%
-    Perceptron = MLP(NUM_INPUTS,NUM_OUTPUTS,NN_LOSS,NN_MET,NN_EPOCHS,
-                     NN_BATCH_SIZE,NN_ACTIVATION,NN_LEARNING_RATE,NN_MOMENTUM,
-                     NN_LYR_1,NN_LYR_2,NN_LYR_3,NN_OPT)
-    Perceptron.Train(Training_X,Training_Y,Holdout_X,Holdout_Y)
-     #print("Perceptron Training Complete")
+    print("Data Managemnt for trial {0} is complete".format(T))
+    
+#    #%%
+#    Cult = Cultivator(NUM_INPUTS,NUM_OUTPUTS,WRKR_NUM_WORKERS,WRKR_LOSS,WRKR_MET,
+#                      WRKR_EPOCHS,WRKR_BATCH_SIZE,WRKR_ACTIVATION,WRKR_LEARNING_RATE,
+#                      WRKR_MOMENTUM,WRKR_LYR_1,WRKR_LYR_2,WRKR_LYR_3,WRKR_OPT,
+#                      LVQ_LEARNING_RATE,LVQ_PREDICTED_NUM_CATAGORIES,
+#                      MSTR_LOSS,MSTR_MET,MSTR_EPOCHS,
+#                      MSTR_BATCH_SIZE,MSTR_ACTIVATION,MSTR_LEARNING_RATE,
+#                      MSTR_MOMENTUM,MSTR_LYR_1,MSTR_LYR_2,MSTR_LYR_3,MSTR_OPT)
+#    
+#    Cult.Train(Training_X,Training_Y,Training_X,Training_Y)
+#    #Cult.Train(Training_X,Training_Y,Holdout_X,Holdout_Y)
+#    #print("Cultivator Training Complete")
+#    #%%
+#    Perceptron = MLP(NUM_INPUTS,NUM_OUTPUTS,NN_LOSS,NN_MET,NN_EPOCHS,
+#                     NN_BATCH_SIZE,NN_ACTIVATION,NN_LEARNING_RATE,NN_MOMENTUM,
+#                     NN_LYR_1,NN_LYR_2,NN_LYR_3,NN_OPT)
+#    Perceptron.Train(Training_X,Training_Y,Holdout_X,Holdout_Y)
+#     #print("Perceptron Training Complete")
      
     #%%
-    MixtureOfExperts = MoE(NUM_INPUTS,NUM_OUTPUTS,WRKR_NUM_WORKERS,WRKR_LOSS,WRKR_MET,
-                      WRKR_EPOCHS,WRKR_BATCH_SIZE,WRKR_ACTIVATION,WRKR_LEARNING_RATE,
-                      WRKR_MOMENTUM,WRKR_LYR_1,WRKR_LYR_2,WRKR_LYR_3,WRKR_OPT,
-                      LVQ_LEARNING_RATE,LVQ_PREDICTED_NUM_CATAGORIES,
-                      MSTR_LOSS,MSTR_MET,MSTR_EPOCHS,
-                      MSTR_BATCH_SIZE,MSTR_ACTIVATION,MSTR_LEARNING_RATE,
-                      MSTR_MOMENTUM,MSTR_LYR_1,MSTR_LYR_2,MSTR_LYR_3,MSTR_OPT)
-    MixtureOfExperts.Train(Training_X,Training_Y,Holdout_X,Holdout_Y)
+    sgd_moe = MOE(Training_X, Training_Y, k = MoE_K,lamda = MoE_Lamda, inter = MoE_I,lazy = MoE_Lazy, type = MoE_Type)
+    #sgd_moe.sgdTrain(Training_X, Training_Y)
+    sgd_moe.sgdTrain(Validation_X, Validation_Y)
+    
+    #MixtureOfExperts = MoE(NUM_INPUTS,NUM_OUTPUTS,WRKR_NUM_WORKERS,WRKR_LOSS,WRKR_MET,
+    #                  WRKR_EPOCHS,WRKR_BATCH_SIZE,WRKR_ACTIVATION,WRKR_LEARNING_RATE,
+    #                  WRKR_MOMENTUM,WRKR_LYR_1,WRKR_LYR_2,WRKR_LYR_3,WRKR_OPT,
+    #                  LVQ_LEARNING_RATE,LVQ_PREDICTED_NUM_CATAGORIES,
+    #                  MSTR_LOSS,MSTR_MET,MSTR_EPOCHS,
+    #                  MSTR_BATCH_SIZE,MSTR_ACTIVATION,MSTR_LEARNING_RATE,
+    #                  MSTR_MOMENTUM,MSTR_LYR_1,MSTR_LYR_2,MSTR_LYR_3,MSTR_OPT)
+    #MixtureOfExperts.Train(Training_X,Training_Y,Holdout_X,Holdout_Y)
+    print("Training for trial {0} is complete".format(T))
     #%% NN Exeute Loop
     for i in range(0,VALIDATION):
-        C_Results[(T*VALIDATION)+i] = Cult.Execute(np.array([Validation_X[i],]))
-        MLP_Results[(T*VALIDATION)+i] = Perceptron.Execute(np.array([Validation_X[i],]))
-        MoE_Results[(T*VALIDATION)+i] = MixtureOfExperts.Execute(np.array([Validation_X[i],]))
-        Composite_Targets[(T*VALIDATION)+i] = Validation_Y[i]
-        
-        
-        Worker_List = Cult.Get_Worker_List()
-        Num_Workers = np.size(Worker_List)
-        for j in range(0,Num_Workers):
-            Worker_Results[j,(T*VALIDATION)+i] = Worker_List[j].predict(np.array([Validation_X[i],]),batch_size=None, verbose=0, steps=None)
+        #C_Results[(T*VALIDATION)+i] = Cult.Execute(np.array([Validation_X[i],]))
+        #MLP_Results[(T*VALIDATION)+i] = Perceptron.Execute(np.array([Validation_X[i],]))
+        MoE_Results[(T*VALIDATION)+i] = sgd_moe.predict([Validation_X[i],])
+        print(MoE_Results[(T*VALIDATION)+i])
+        #Composite_Targets[(T*VALIDATION)+i] = Validation_Y[i]
     
-    #print('Trial ',T,' Complete')    
+    print("Execution for trial {0} is complete".format(T)) 
 
 #%% 
-np.savetxt(ManagerOutputFile,C_Results,delimiter=",")
-np.savetxt(NNOutputFile,MLP_Results,delimiter=",")
-np.savetxt(MoEOutputFile,MoE_Results,delimiter=",")
-np.savetxt(TrueOutputFile,Composite_Targets,delimiter=",")
-for i in range(0,WRKR_NUM_WORKERS):
-    np.savetxt((WorkerCompositeOutputFile + str(i) + ".txt"),Worker_Results[i],delimiter=",")
+#np.savetxt(ManagerOutputFile,C_Results,delimiter=",")
+#np.savetxt(NNOutputFile,MLP_Results,delimiter=",")
+#np.savetxt(MoEOutputFile,MoE_Results,delimiter=",")
+#np.savetxt(TrueOutputFile,Composite_Targets,delimiter=",")
+#for i in range(0,WRKR_NUM_WORKERS):
+#    np.savetxt((WorkerCompositeOutputFile + str(i) + ".txt"),Worker_Results[i],delimiter=",")

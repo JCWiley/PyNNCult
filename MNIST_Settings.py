@@ -16,7 +16,8 @@ DataFilePath = 'C:\\Users\\John\\Stuff\\NN Cultivator\\MNIST Data'
 
 ManagerOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MNISTManagerResult.txt"
 NNOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MNISTNNResult.txt"
-TrueOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\TrueNNResult.txt"
+MoEOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MNISTMoEResult.txt
+TrueOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MNISTTrueResult.txt"
 
 #%%
 #set data variables
@@ -42,7 +43,7 @@ WRKR_BATCH_SIZE = 1
 WRKR_ACTIVATION = 'sigmoid'
 WRKR_LEARNING_RATE = .1
 WRKR_MOMENTUM = .4
-WRKR_LYR_1 = 500
+WRKR_LYR_1 = 50
 WRKR_LYR_2 = 8 #not used
 WRKR_LYR_3 = NUM_OUTPUTS
 WRKR_OPT = optimizers.SGD(lr=WRKR_LEARNING_RATE, decay=0, momentum=WRKR_MOMENTUM, nesterov=False)
@@ -59,7 +60,7 @@ MSTR_BATCH_SIZE = 1
 MSTR_ACTIVATION = 'sigmoid'
 MSTR_LEARNING_RATE = .1
 MSTR_MOMENTUM = .4
-MSTR_LYR_1 = 500
+MSTR_LYR_1 = 50
 MSTR_LYR_2 = 8 #not used
 MSTR_LYR_3 = LVQ_PREDICTED_NUM_CATAGORIES
 MSTR_OPT = optimizers.SGD(lr=MSTR_LEARNING_RATE, decay=0, momentum=MSTR_MOMENTUM, nesterov=False)
@@ -72,10 +73,17 @@ NN_BATCH_SIZE = 1
 NN_ACTIVATION = 'sigmoid'
 NN_LEARNING_RATE = .1
 NN_MOMENTUM = .4
-NN_LYR_1 = 500
+NN_LYR_1 = 50
 NN_LYR_2 = 8 #not used
 NN_LYR_3 = NUM_OUTPUTS
 NN_OPT = optimizers.SGD(lr=NN_LEARNING_RATE, decay=0, momentum=NN_MOMENTUM, nesterov=False)
+
+#set MoE variables
+MoE_I = 10
+MoE_Lamda = .1
+MoE_K = 4
+MoE_Lazy = .99
+MoE_Type = 'classification'
         
 #%% Import data from file
 mndata = MNIST('C:\\Users\\John\\Stuff\\NN Cultivator\\MNIST Data')
@@ -104,6 +112,6 @@ np.concatenate((Images,One_Hot_Labels),axis=1,out=dataset)
 #    dataset[x] = Images[x] + One_Hot_Labels[x]
     
 print(np.shape(dataset))
-
+print("MNIST Load Complete")
 #dataset = np.loadtxt(DataFileName, delimiter=DataFileDelimiter)
 #Data_Length = np.size(dataset,0)

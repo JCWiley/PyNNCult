@@ -62,26 +62,26 @@ class Cultivator:
 #%%
     def Train(self,Training_Inputs,Training_Outputs,Holdout_Inputs,Holdout_Outputs):
                 
-        start = timer()
+        #start = timer()
         
         WRKR_ACC_Tuple = self.Train_Workers(Training_Inputs,Training_Outputs)
         
-        end = timer()
+        #end = timer()
 
-        print("time to train workers")
-        print(end - start)
+        #print("time to train workers")
+        #print(end - start)
         
         self.Generate_Best_Worker_List(WRKR_ACC_Tuple[0],WRKR_ACC_Tuple[1])
         
-        start = timer()
+        #start = timer()
         
         self.Train_Master(Holdout_Inputs,Holdout_Outputs)
         
-        end = timer()
+        #end = timer()
 
-        print("time to train master")
-        print(end - start)
-        print("-------------End of Training Cycle--------------")
+        #print("time to train master")
+        #print(end - start)
+        #print("-------------End of Training Cycle--------------")
 #%%
     def Execute(self,Inputs):
         
@@ -177,8 +177,8 @@ class Cultivator:
         
         #train master
 #%%
-        print("1")
+        #print("1")
         self.Master.fit(Training_Inputs,Performance_Record,epochs=self.MSTR_EPOCHS,batch_size=self.MSTR_BATCH_SIZE,verbose=DEBUG)
-        print("2")
+        #print("2")
         #print("Master Training Complete")
     
