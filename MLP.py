@@ -34,7 +34,7 @@ class MLP:
         self.LYR_3 = I_LYR_3
         self.OPT = I_OPT
 #%%
-    def Train(self,Training_Inputs,Training_Outputs,Holdout_Inputs,Holdout_Outputs):
+    def Train(self,Training_Inputs,Training_Outputs):
         self.Model = Sequential()
         self.Model.add(Dense(self.LYR_1,input_dim=self.NUM_INPUTS,activation=self.ACTIVATION))
         #Model.add(Dense(self.LYR_2,activation=self.ACTIVATION))

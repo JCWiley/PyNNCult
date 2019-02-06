@@ -16,7 +16,7 @@ DataFilePath = 'C:\\Users\\John\\Stuff\\NN Cultivator\\MNIST Data'
 
 ManagerOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MNISTManagerResult.txt"
 NNOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MNISTNNResult.txt"
-MoEOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MNISTMoEResult.txt
+MoEOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MNISTMoEResult.txt"
 TrueOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MNISTTrueResult.txt"
 
 #%%
@@ -26,9 +26,11 @@ NUM_OUTPUTS = 10
 
 #stratify data.
 #Must sum to the total number of vectors
-HOLDOUT = 0
-TRAINING = 60000
-VALIDATION = 10000
+HOLDOUT = 68000
+#TRAINING = 60000
+#VALIDATION = 10000
+TRAINING = 1000
+VALIDATION = 1000
 TOTAL = HOLDOUT + TRAINING + VALIDATION
 
 #statistics variables
@@ -79,11 +81,17 @@ NN_LYR_3 = NUM_OUTPUTS
 NN_OPT = optimizers.SGD(lr=NN_LEARNING_RATE, decay=0, momentum=NN_MOMENTUM, nesterov=False)
 
 #set MoE variables
-MoE_I = 10
-MoE_Lamda = .1
-MoE_K = 4
-MoE_Lazy = .99
-MoE_Type = 'classification'
+MOE_LOSS = 'mean_squared_error'
+MOE_MET = ['accuracy']
+MOE_EPOCHS = 500
+MOE_BATCH_SIZE = 200
+MOE_EXPRT_ACTIVATION = 'sigmoid'
+MOE_GATE_ACTIVATION ='sigmoid'
+MOE_NUM_EXPERTS = 30
+MOE_LEARNING_RATE = .1
+MOE_MOMENTUM = .4
+MOE_OPT = optimizers.SGD(lr=MOE_LEARNING_RATE, decay=0, momentum=MOE_MOMENTUM, nesterov=False)
+MOE_DEBUG = 0
         
 #%% Import data from file
 mndata = MNIST('C:\\Users\\John\\Stuff\\NN Cultivator\\MNIST Data')
@@ -98,6 +106,8 @@ print(np.shape(Te_Labels))
 print(np.shape(Images))
 
 print(np.unique(Tr_Labels))
+
+Images = np.true_divide(Images,256)
 
 One_Hot_Labels = np.zeros((TOTAL,NUM_OUTPUTS))
 One_Hot_Labels[np.arange(TOTAL),Labels] = 1

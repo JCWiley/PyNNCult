@@ -27,7 +27,7 @@ DataFilePath = r"C:\Users\John\Stuff\NN Cultivator\MilSong\MillionSongSubset"
 
 ManagerOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MilSongManagerResult.txt"
 NNOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MilSongNNResult.txt"
-MoEOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MilSongMoEResult.txt
+MoEOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MilSongMoEResult.txt"
 TrueOutputFile = r"C:\Users\John\Stuff\NN Cultivator\OutputData\MilSongTrueResult.txt"
 
 ext='.h5'
@@ -92,19 +92,26 @@ NN_LYR_3 = NUM_OUTPUTS
 NN_OPT = optimizers.SGD(lr=NN_LEARNING_RATE, decay=0, momentum=NN_MOMENTUM, nesterov=False)
 
 #set MoE variables
-MoE_I = 10
-MoE_Lamda = .1
-MoE_K = 4
-MoE_Lazy = .99
-MoE_Type = 'classification'
+MOE_LOSS = 'mean_squared_error'
+MOE_MET = ['accuracy']
+MOE_EPOCHS = 500
+MOE_BATCH_SIZE = 200
+MOE_EXPRT_ACTIVATION = 'sigmoid'
+MOE_GATE_ACTIVATION ='sigmoid'
+MOE_NUM_EXPERTS = 30
+MOE_LEARNING_RATE = .1
+MOE_MOMENTUM = .4
+MOE_OPT = optimizers.SGD(lr=MOE_LEARNING_RATE, decay=0, momentum=MOE_MOMENTUM, nesterov=False)
+MOE_DEBUG = 0
 
 #%%
 dataset = np.zeros((TOTAL,NUM_INPUTS+NUM_OUTPUTS))
 
+index = 0
+
 titles = []
 for root, dirs, files in os.walk(DataFilePath):
     files = glob.glob(os.path.join(root,'*'+ext))
-    index = 0
     for f in files:
         h5 = hdf5_getters.open_h5_file_read(f)
         if hdf5_getters.get_num_songs(h5) == 1:
@@ -113,11 +120,17 @@ for root, dirs, files in os.walk(DataFilePath):
             Time_Sig = hdf5_getters.get_time_signature(h5)
             Key = hdf5_getters.get_key(h5)
             Year = hdf5_getters.get_year(h5)
-            if(Year != 0):
+            if(Year != 0 and (Fade+Loudness+Time_Sig+Key)!=0):
                 dataset[index,0] = Fade
                 dataset[index,1] = Loudness
                 dataset[index,2] = Time_Sig
                 dataset[index,3] = Key
+#                print("-------")
+#                print(Fade)
+#                print(Loudness)
+#                print(Time_Sig)
+#                print(Key)
+#                print("-------")
                 if(Year < 1900):
                     Decade = 0
                 elif(Year < 1910):
@@ -142,19 +155,29 @@ for root, dirs, files in os.walk(DataFilePath):
                     Decade = 10
                 elif(Year < 2010):
                     Decade = 11
-                elif(Year < 2020):
-                    Decade = 12
+                elif(Year < 2020):                    Decade = 12
                 else:
                     Decade = 0
                 dataset[index,Decade+4] = 1
                 index = index+1
+                #print(dataset[index-1])
         #print(index)
         h5.close()
+#%%        
+#print(dataset.shape)
+#print(index)
+#print("Milsong Load Complete")
         
-print(dataset.shape)
-print("Milsong Load Complete")
-        
-        
+#stratify data.
+#Must sum to the total number of vectors
+HOLDOUT = 0
+VALIDATION = index//5
+TRAINING = index-VALIDATION
+TOTAL = HOLDOUT + TRAINING + VALIDATION
+
+print(VALIDATION)
+print(TRAINING)
+print(TOTAL)
         
         
         

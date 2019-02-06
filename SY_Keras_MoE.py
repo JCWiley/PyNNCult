@@ -25,7 +25,7 @@ os.environ["MKL_THREADING_LAYER"] = "GNU"
 os.environ['THEANO_FLAGS'] = "device=cuda,force_device=True,floatX=float32"
 
 from keras.models import Model
-from keras.layers import Dense, Input, Reshape, merge, Lambda
+from keras.layers import Dense, Input, Reshape, Multiply, Lambda
 from keras import backend as K
 
 #%%        
@@ -57,7 +57,7 @@ class MoE:
 
 
 #%%
-    def Train(self,Training_Inputs,Training_Outputs,Holdout_Inputs,Holdout_Outputs):
+    def Train(self,Training_Inputs,Training_Outputs):
         input_vector = Input(shape=(self.NUM_INPUTS,))
         
         expert_num = self.MOE_NUM_EXPERTS
@@ -69,7 +69,7 @@ class MoE:
         expert = Dense(self.NUM_OUTPUTS*self.MOE_NUM_EXPERTS, activation=self.MOE_EXPRT_ACTIVATION)(input_vector)
         expert = Reshape((self.NUM_OUTPUTS, self.MOE_NUM_EXPERTS))(expert)
         
-        output = merge([gate, expert], mode='mul')
+        output = Multiply()([gate, expert])
         output = Lambda(reduce, output_shape=(self.NUM_OUTPUTS,), arguments={'axis': 2})(output)
         
         self.model = Model(input=input_vector, output=output)

@@ -60,7 +60,7 @@ class Cultivator:
         self.MSTR_LYR_3 = I_MSTR_LYR_3
         self.MSTR_OPT = I_MSTR_OPT
 #%%
-    def Train(self,Training_Inputs,Training_Outputs,Holdout_Inputs,Holdout_Outputs):
+    def Train(self,Training_Inputs,Training_Outputs):
                 
         #start = timer()
         
@@ -75,7 +75,7 @@ class Cultivator:
         
         #start = timer()
         
-        self.Train_Master(Holdout_Inputs,Holdout_Outputs)
+        self.Train_Master(Training_Inputs,Training_Outputs)
         
         #end = timer()
 
